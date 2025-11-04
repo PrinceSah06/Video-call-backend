@@ -50,6 +50,14 @@ const roomhandler =(socket :Socket) =>{
     socket.on("create-room",createRoom)
     socket.on('join-room',joinRoom)
 
+    // whene ever any join room
+
+    socket.on('ready', (data: { roomId: string, peerId: string }) => {
+        // frome fronend someone join the room we will emit a ready event 
+        // th;en from our server we will emits an event to all the clients conn that a new peet had added
+        if (!data || !data.roomId || !data.peerId) return;
+        socket.to(data.roomId).emit('user-join', { peerId: data.peerId });
+    })
 }
 
 export default roomhandler;
